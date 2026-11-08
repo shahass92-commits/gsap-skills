@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CINQ Connected Mobility</title>
+<meta name="description" content="CINQ connected mobility: campus, airport, port and corridor transport by Compass Travel &amp; Transportation. GSAP ScrollTrigger landing page." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #f5f6f8;
+    --paper-ink: #eceef1;
+    --ink: #11161b;
+    --muted: #6b7480;
+    --night: #0f1418;
+    --card: #172027;
+    --card-line: #26313a;
+    --teal: #2aa6c8;
+    --gold: #c9a24a;
+    --mobility: #2b6cf6;
+    --terminal: #7c4dff;
+    --power: #1f9d55;
+    --logistics: #ef8a22;
+    --sky-h: 58vh;
+    --road-h: 11vh;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --sans: "Inter", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-family: var(--sans); background: var(--night); color: var(--ink); overflow-x: hidden; }
+  .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+  /* ---------- STAGE (hero, pinned) ---------- */
+  .stage { position: relative; height: 100vh; overflow: hidden; background: var(--night); }
+  .sky { position: absolute; inset: 0 0 auto 0; height: var(--sky-h); background: var(--paper); }
+  .bigword-wrap { position: absolute; left: 3vw; top: -3.5vh; pointer-events: none; }
+  .bigword { display: block; font-weight: 900; font-size: min(24vw, 46vh); line-height: 1; letter-spacing: -0.04em; color: var(--paper-ink); white-space: nowrap; }
+  .hud { position: absolute; z-index: 20; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; padding: 4.5vh 4vw 0; pointer-events: none; }
+  .brand b { display: block; font-size: 22px; font-weight: 800; letter-spacing: 0.04em; }
+  .brand small, .kmh small { display: block; font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin-top: 6px; font-weight: 600; }
+  .kmh { text-align: right; font-weight: 800; font-size: 18px; letter-spacing: 0.04em; color: #46505a; font-variant-numeric: tabular-nums; }
+  .car-side { position: absolute; left: 50%; bottom: calc(100vh - var(--sky-h)); width: min(72vw, 112vh); transform: translate(-50%, 3.2%); will-change: transform; }
+  .car-side svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .road { position: absolute; left: 0; right: 0; top: var(--sky-h); height: var(--road-h); background: linear-gradient(#0b0d0f, #15181b 18%, #121417); overflow: hidden; }
+  .dashes { position: absolute; top: 58%; left: 0; width: calc(100% + 260px); height: 4px; border-radius: 2px; background: repeating-linear-gradient(90deg, #5d636b 0 110px, transparent 110px 260px); will-change: transform; }
+  .curb { position: absolute; left: 0; right: 0; top: calc(var(--sky-h) + var(--road-h)); height: 1.6vh; background: #fff; }
+  .cards { position: absolute; left: 0; right: 0; bottom: 0; top: calc(var(--sky-h) + var(--road-h) + 1.6vh); padding: 2vh 2vw 2.2vh; }
+  .card { position: relative; height: 100%; border-radius: 22px; background: linear-gradient(180deg, #1a242c, var(--card)); border: 1px solid var(--card-line); display: grid; grid-template-columns: minmax(150px, 15vw) 1px 1fr; gap: 0 3vw; padding: 3vh 3vw 2.4vh 2.4vw; overflow: hidden; }
+  .card-progress { position: absolute; left: 2.4vw; right: 2.4vw; top: 0; height: 2px; background: #2a353f; }
+  .card-progress i { position: absolute; inset: 0; transform-origin: 0 50%; background: linear-gradient(90deg, var(--teal), #7fd6ee); transform: scaleX(0.1); }
+  .numcol { display: flex; flex-direction: column; justify-content: flex-start; }
+  .odo { display: flex; font-family: var(--mono); font-weight: 500; color: var(--teal); font-size: clamp(44px, 8.5vh, 92px); line-height: 1; height: 1em; overflow: hidden; }
+  .odo .col { display: block; height: 1em; overflow: hidden; }
+  .odo .col > span { display: block; }
+  .odo .col > span > span { display: block; height: 1em; }
+  .numcol small { margin-top: 2vh; font-size: 11px; letter-spacing: 0.14em; color: #6f7b86; font-weight: 700; }
+  .divider { background: #2b363f; }
+  .content { position: relative; min-width: 0; }
+  .txt { position: absolute; inset: 0 0 auto 0; }
+  .txt h2 { font-family: var(--mono); font-weight: 700; color: #eef3f6; font-size: clamp(16px, 2.4vh, 24px); letter-spacing: 0.06em; text-transform: uppercase; }
+  .txt h3 { margin-top: 1.4vh; color: #f3f6f8; font-size: clamp(15px, 2.3vh, 22px); font-weight: 700; }
+  .txt p { margin-top: 1.4vh; color: #aab4bd; font-size: clamp(13px, 1.8vh, 17px); line-height: 1.6; max-width: 620px; }
+  .w, .wm { display: inline-block; white-space: nowrap; }
+  .wm { overflow: hidden; vertical-align: top; padding-bottom: 0.08em; }
+  .ch, .wi { display: inline-block; will-change: transform; }
+  .card-foot { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: space-between; }
+  .card-foot .sec { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #7e8994; font-variant-numeric: tabular-nums; }
+  .btn { pointer-events: auto; display: inline-flex; align-items: center; gap: 22px; padding: 12px 18px 12px 22px; border-radius: 999px; border: 1.5px solid #e8eef2; background: rgba(255,255,255,0.06); color: #f2f6f8; font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-decoration: none; text-transform: uppercase; transition: background .25s; }
+  .btn:hover { background: rgba(255,255,255,0.14); }
+  .btn span { color: var(--teal); font-size: 18px; }
+
+  /* aerial layer */
+  .aerial { position: absolute; inset: 0; z-index: 10; visibility: hidden; opacity: 0; background: #17191c; }
+  .aerial svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .aerial .headline { position: absolute; left: 6vw; top: 22vh; color: #fff; font-weight: 900; font-size: clamp(32px, min(7.4vh, 10.5vw), 84px); line-height: 0.98; letter-spacing: -0.02em; text-transform: uppercase; }
+  .line { display: block; overflow: hidden; }
+  .line > span { display: block; }
+  .headline em { font-style: normal; color: #3d7bff; }
+  .headline .sub { margin-top: 3vh; font-size: clamp(13px, 1.9vh, 17px); font-weight: 500; letter-spacing: 0; text-transform: none; color: #b5bec7; line-height: 1.6; max-width: 420px; }
+  .stats { position: absolute; right: 5vw; bottom: 7vh; display: grid; grid-template-columns: repeat(2, minmax(140px, 1fr)); gap: 3vh 3vw; color: #fff; }
+  .stat b { display: block; font-family: var(--mono); font-size: clamp(30px, 5.6vh, 60px); line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat b sup { font-size: 0.45em; color: var(--gold); margin-left: 4px; vertical-align: 0.9em; }
+  .stat > span { display: block; margin-top: 8px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #9aa5af; font-weight: 600; max-width: 190px; line-height: 1.5; }
+  .scroll-hint { position: absolute; z-index: 21; right: 4vw; top: calc(var(--sky-h) - 4.5vh); font-size: 11px; letter-spacing: 0.18em; color: var(--muted); font-weight: 700; }
+
+  /* ---------- PLATFORM (pinned) ---------- */
+  .platform { position: relative; height: 100vh; overflow: hidden; background: linear-gradient(180deg, #f3f6f9, #e9eef3); display: grid; grid-template-columns: 1fr min(19vw, 230px); }
+  .pf-left { position: relative; padding: 4.5vh 3vw 3vh 4vw; display: flex; flex-direction: column; min-width: 0; }
+  .pf-head { display: flex; align-items: flex-start; justify-content: space-between; }
+  .pf-head .brand b { color: var(--ink); }
+  .pf-name { position: relative; height: 22px; margin-left: 26px; min-width: 140px; }
+  .pf-name span { position: absolute; left: 0; top: 2px; font-size: 15px; font-weight: 800; letter-spacing: 0.08em; }
+  .pf-count { white-space: nowrap; font-family: var(--mono); font-size: 14px; color: #6d7a88; display: flex; gap: 6px; align-items: center; }
+  .pf-count .odo { font-size: 14px; color: var(--ink); }
+  .panels { position: relative; flex: 1; margin-top: 3vh; }
+  .panel { position: absolute; inset: 0; border-radius: 26px; background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.9); box-shadow: 0 30px 80px -30px rgba(30,50,80,0.35), inset 0 1px 0 #fff; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); display: grid; grid-template-columns: 190px 1fr; overflow: hidden; }
+  .pn-side { padding: 26px 20px; border-right: 1px solid #e4e9ef; background: rgba(247,249,251,0.8); }
+  .pn-logo { font-weight: 900; font-size: 20px; letter-spacing: 0.04em; }
+  .pn-logo small { display: block; font-size: 9px; letter-spacing: 0.3em; font-weight: 700; color: var(--muted); }
+  .pn-nav { margin-top: 26px; display: grid; gap: 6px; font-size: 13px; color: #5d6874; font-weight: 600; }
+  .pn-nav span { padding: 9px 12px; border-radius: 10px; }
+  .pn-nav span.on { background: #fff; color: var(--ink); box-shadow: 0 4px 14px -6px rgba(0,0,0,0.18); }
+  .pn-note { position: absolute; left: 20px; bottom: 22px; width: 150px; font-size: 10.5px; line-height: 1.5; color: #8a95a1; }
+  .pn-main { padding: 26px 28px; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+  .pn-main h4 { font-size: clamp(18px, 2.6vh, 26px); font-weight: 800; letter-spacing: -0.01em; }
+  .pn-main h4 + p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .kpi { background: #fff; border-radius: 16px; padding: 14px 16px; border: 1px solid #edf1f5; }
+  .kpi small { display: block; font-size: 11px; color: var(--muted); font-weight: 600; }
+  .kpi b { display: block; margin-top: 6px; font-size: clamp(22px, 3.4vh, 32px); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .kpi b em { font-style: normal; font-size: 0.55em; color: var(--muted); margin-left: 2px; }
+  .viz { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; }
+  .box { background: #fff; border-radius: 18px; border: 1px solid #edf1f5; padding: 16px 18px; min-height: 0; overflow: hidden; position: relative; }
+  .box h5 { font-size: 12px; font-weight: 700; color: #3c4651; letter-spacing: 0.02em; margin-bottom: 10px; }
+  .box svg { width: 100%; height: calc(100% - 24px); display: block; }
+  .rows { display: grid; gap: 10px; font-size: 12.5px; }
+  .rows > div { display: flex; justify-content: space-between; gap: 8px; padding-bottom: 9px; border-bottom: 1px solid #f0f3f6; color: #3c4651; }
+  .rows > div > span:last-child { color: var(--muted); }
+  .bar { height: 8px; border-radius: 6px; background: #edf1f5; overflow: hidden; margin-top: 6px; }
+  .bar i { display: block; height: 100%; border-radius: 6px; transform-origin: 0 50%; }
+  .pf-road { position: relative; background: #141619; overflow: hidden; border-left: 3px solid #0a0b0c; }
+  .pf-road::before, .pf-road::after { content: ""; position: absolute; top: 0; bottom: 0; width: 3px; background: #2c3035; }
+  .pf-road::before { left: 10%; } .pf-road::after { right: 10%; }
+  .lane { position: absolute; top: -200px; bottom: -200px; left: 50%; width: 4px; margin-left: -2px; background: repeating-linear-gradient(180deg, #6a7078 0 70px, transparent 70px 170px); will-change: transform; }
+  .pf-car { position: absolute; left: 50%; top: 50%; width: 34%; transform: translate(-50%, -50%); filter: drop-shadow(0 18px 18px rgba(0,0,0,0.5)); }
+  .pf-car svg { display: block; width: 100%; height: auto; }
+
+  /* ---------- FOOTER ---------- */
+  .cta { position: relative; background: var(--night); color: #fff; padding: 16vh 6vw 8vh; overflow: hidden; }
+  .cta h2 { font-size: clamp(40px, 8vw, 120px); font-weight: 900; line-height: 0.95; letter-spacing: -0.03em; text-transform: uppercase; }
+  .cta h2 em { font-style: normal; color: var(--teal); }
+  .cta p { margin-top: 4vh; max-width: 560px; color: #aab4bd; line-height: 1.7; }
+  .contact { margin-top: 7vh; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; border-top: 1px solid #26313a; padding-top: 4vh; }
+  .contact small { display: block; font-size: 11px; letter-spacing: 0.16em; color: #6f7b86; font-weight: 700; margin-bottom: 8px; }
+  .contact a, .contact span { color: #e6ecf0; text-decoration: none; display: block; line-height: 1.7; }
+  .contact a:hover { color: var(--teal); }
+  .legal { margin-top: 8vh; font-size: 12px; color: #5f6b76; }
+
+  @media (max-width: 760px) {
+    :root { --sky-h: 46vh; --road-h: 8vh; }
+    .car-side { width: 96vw; }
+    .card { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding: 3vh 5vw 2vh; gap: 1.5vh; }
+    .divider, .numcol small, .scroll-hint { display: none; }
+    .odo { font-size: 46px; }
+    .btn { padding: 10px 14px; gap: 10px; font-size: 11px; }
+    .stats { left: 6vw; right: 6vw; grid-template-columns: repeat(2, 1fr); }
+    .aerial .headline { top: 14vh; }
+    .platform { grid-template-columns: 1fr 80px; }
+    .pf-left { padding: 3vh 4vw; }
+    .pf-name { margin-left: 12px; }
+    .panel { grid-template-columns: 1fr; }
+    .pn-side { display: none; }
+    .pn-main { padding: 18px; gap: 12px; }
+    .kpis { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .viz { grid-template-columns: 1fr; }
+    .viz .box:last-child { display: none; }
+    .pf-car { width: 52%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ SVG SPRITE: top-view vehicle ============ -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="topBody" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b9c0c8"/><stop offset="0.12" stop-color="#e9ecef"/>
+      <stop offset="0.5" stop-color="#ffffff"/><stop offset="0.88" stop-color="#e9ecef"/>
+      <stop offset="1" stop-color="#b9c0c8"/>
+    </linearGradient>
+    <linearGradient id="topGlass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a4654"/><stop offset="1" stop-color="#0d1217"/>
+    </linearGradient>
+    <linearGradient id="topRed" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7d0c13"/><stop offset="1" stop-color="#ff3a46"/>
+    </linearGradient>
+    <filter id="topShadow" x="-30%" y="-20%" width="160%" height="140%"><feGaussianBlur stdDeviation="9"/></filter>
+    <symbol id="sym-top" viewBox="0 0 220 460">
+      <rect x="18" y="22" width="184" height="432" rx="62" fill="#000" opacity="0.55" filter="url(#topShadow)"/>
+      <g id="topHalf">
+        <!-- mirror -->
+        <path d="M24 138 C8 134 0 144 4 154 L26 156 Z" fill="#dfe3e7" stroke="#9aa3ad" stroke-width="1"/>
+        <path d="M6 150 L24 152" stroke="#20262c" stroke-width="2"/>
+      </g>
+      <use href="#topHalf" transform="translate(220 0) scale(-1 1)"/>
+      <!-- body -->
+      <path d="M110 10 C160 10 190 22 196 60 L202 140 C204 220 204 330 200 400 C198 436 176 452 110 452 C44 452 22 436 20 400 C16 330 16 220 18 140 L24 60 C30 22 60 10 110 10 Z" fill="url(#topBody)" stroke="#a7afb8" stroke-width="1.2"/>
+      <!-- hood creases -->
+      <path d="M72 26 C76 64 79 96 80 120" stroke="#c9cfd6" stroke-width="2" fill="none"/>
+      <path d="M148 26 C144 64 141 96 140 120" stroke="#c9cfd6" stroke-width="2" fill="none"/>
+      <path d="M96 18 C104 16 116 16 124 18" stroke="#d3d8dd" stroke-width="2" fill="none"/>
+      <!-- windshield -->
+      <path d="M40 128 C70 110 150 110 180 128 L172 180 C140 170 80 170 48 180 Z" fill="url(#topGlass)"/>
+      <path d="M60 126 L84 118 L64 172 L52 174 Z" fill="#fff" opacity="0.12"/>
+      <!-- side glass strips -->
+      <path d="M30 150 L44 180 L44 382 L32 402 C27 330 27 220 30 150 Z" fill="url(#topGlass)"/>
+      <path d="M190 150 L176 180 L176 382 L188 402 C193 330 193 220 190 150 Z" fill="url(#topGlass)"/>
+      <!-- roof + panoramic glass -->
+      <rect x="64" y="196" width="92" height="132" rx="16" fill="url(#topGlass)"/>
+      <path d="M72 204 L104 204 L76 300 L72 300 Z" fill="#fff" opacity="0.1"/>
+      <path d="M52 192 L52 380 M168 192 L168 380" stroke="#262b31" stroke-width="5" stroke-linecap="round"/>
+      <!-- rear glass -->
+      <path d="M48 386 C80 394 140 394 172 386 L178 420 C140 432 80 432 42 420 Z" fill="url(#topGlass)"/>
+      <!-- lights -->
+      <path d="M32 44 C42 28 64 18 86 15 L84 25 C64 29 48 38 40 52 Z" fill="#1b2430"/>
+      <path d="M38 42 C48 30 64 23 84 19" stroke="#e8f7ff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M188 44 C178 28 156 18 134 15 L136 25 C156 29 172 38 180 52 Z" fill="#1b2430"/>
+      <path d="M182 42 C172 30 156 23 136 19" stroke="#e8f7ff" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M26 426 C40 444 66 448 90 449 L90 441 C68 440 44 436 30 420 Z" fill="url(#topRed)"/>
+      <path d="M194 426 C180 444 154 448 130 449 L130 441 C152 440 176 436 190 420 Z" fill="url(#topRed)"/>
+      <rect x="96" y="440" width="28" height="5" rx="2.5" fill="#7d0c13"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ STAGE: hero + 10 services + aerial ============ -->
+<section class="stage" id="stage" aria-label="CINQ services">
+  <div class="sky">
+    <div class="bigword-wrap" aria-hidden="true"><span class="bigword" id="bigword">MOBILITY</span></div>
+  </div>
+
+  <div class="hud">
+    <div class="brand" id="hudBrand"><b>CINQ</b><small>CONNECTED MOBILITY</small></div>
+    <div class="kmh" id="hudKmh"><span id="kmh">0</span> KM/H<small>LIVE CORRIDOR</small></div>
+  </div>
+  <div class="scroll-hint" id="scrollHint">SCROLL TO DRIVE ↓</div>
+
+  <div class="car-side" id="carSide" aria-hidden="true">
+    <svg viewBox="0 0 900 340" role="img">
+      <defs>
+        <linearGradient id="bodyG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff"/><stop offset="0.42" stop-color="#f6f7f9"/>
+          <stop offset="0.72" stop-color="#e2e6ea"/><stop offset="1" stop-color="#bfc6ce"/>
+        </linearGradient>
+        <linearGradient id="glassG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#36414e"/><stop offset="1" stop-color="#0c1116"/>
+        </linearGradient>
+        <linearGradient id="rimG" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#f4f6f8"/><stop offset="0.5" stop-color="#9aa2ab"/><stop offset="1" stop-color="#e6e9ec"/>
+        </linearGradient>
+        <linearGradient id="redG" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#8d0d16"/><stop offset="1" stop-color="#ff3c48"/>
+        </linearGradient>
+        <linearGradient id="sheenG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="aoG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#5b6570" stop-opacity="0"/><stop offset="1" stop-color="#5b6570" stop-opacity="0.35"/>
+        </linearGradient>
+        <radialGradient id="shadowG"><stop offset="0" stop-color="#000" stop-opacity="0.5"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+        <filter id="glow" x="-20%" y="-200%" width="140%" height="500%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="bodyClip"><path id="bodyPath" d="M60 250 C54 230 52 200 54 170 L58 112 C60 86 70 68 92 62 L520 52 C560 51 590 56 612 70 L700 128 C760 136 812 148 846 166 C864 178 872 196 872 214 C872 232 868 244 862 252 L755.2 252 A66 66 0 1 0 624.8 252 L270.2 252 A66 66 0 1 0 139.8 252 L66 252 Z"/></clipPath>
+      </defs>
+
+      <ellipse cx="462" cy="318" rx="430" ry="16" fill="url(#shadowG)"/>
+      <!-- wheel wells -->
+      <path d="M755.2 252 A66 66 0 1 0 624.8 252 Z" fill="#14171a"/>
+      <path d="M270.2 252 A66 66 0 1 0 139.8 252 Z" fill="#14171a"/>
+      <!-- wheels (filled by JS) -->
+      <g id="wheelRear" transform="translate(205 265)"></g>
+      <g id="wheelFront" transform="translate(690 265)"></g>
+
+      <g id="carBody">
+        <use href="#bodyPath" fill="url(#bodyG)" stroke="#aeb6bf" stroke-width="1.4"/>
+        <g clip-path="url(#bodyClip)">
+          <rect x="0" y="140" width="900" height="34" fill="url(#sheenG)" opacity="0.8"/>
+          <rect x="0" y="212" width="900" height="44" fill="url(#aoG)"/>
+        </g>
+        <!-- lower trims -->
+        <path d="M270 240 L625 238 L624.8 252 L270.2 252 Z" fill="#1d2126"/>
+        <path d="M755 252 L862 252 C866 246 869 240 870 232 L766 238 Z" fill="#1d2126"/>
+        <path d="M66 252 L139.8 252 L144 240 L56 236 C58 244 61 249 66 252 Z" fill="#1d2126"/>
+        <!-- roof rail -->
+        <path d="M120 60 L478 52" stroke="#23282e" stroke-width="5" stroke-linecap="round"/>
+        <path d="M150 60 L150 64 M300 57 L300 61 M450 54 L450 58" stroke="#23282e" stroke-width="4"/>
+        <!-- continuous glass band with black pillars -->
+        <path d="M70 134 L74 104 C76 84 86 74 104 72 L512 64 C545 63 568 68 590 80 L676 134 Z" fill="url(#glassG)"/>
+        <path d="M596 74 L690 128 L702 128 L616 70 Z" fill="#26303a"/>
+        <path d="M144 73 L160 73 L156 134 L140 134 Z" fill="#05070a"/>
+        <path d="M330 68 L344 68 L344 134 L330 134 Z" fill="#05070a"/>
+        <path d="M512 64 L526 64 L530 134 L516 134 Z" fill="#05070a"/>
+        <path d="M184 75 L244 74 L186 132 L140 132 Z" fill="#fff" opacity="0.07"/>
+        <path d="M400 69 L458 68 L398 132 L352 132 Z" fill="#fff" opacity="0.07"/>
+        <path d="M560 70 L592 82 L566 132 L540 132 Z" fill="#fff" opacity="0.06"/>
+        <!-- chrome window trims -->
+        <path d="M70 135 L678 135" stroke="#eef1f3" stroke-width="3"/>
+        <path d="M104 70 L512 62 C545 61 568 66 590 78" stroke="#d3d9de" stroke-width="2" fill="none"/>
+        <!-- sliding door rail + character line -->
+        <path d="M150 142 L336 140" stroke="#b9c1c9" stroke-width="2" opacity="0.8"/>
+        <path d="M64 186 C300 180 600 175 860 172" stroke="#ffffff" stroke-width="2.4" fill="none"/>
+        <path d="M64 190 C300 184 600 179 860 176" stroke="#c8cfd6" stroke-width="1.4" fill="none"/>
+        <!-- door seams -->
+        <g stroke="#b3bbc4" stroke-width="1.6" fill="none">
+          <path d="M522 137 C524 180 524 220 520 236"/>
+          <path d="M680 137 C702 160 714 190 718 214"/>
+          <path d="M338 137 C338 180 336 220 334 236"/>
+          <path d="M66 140 C64 170 64 200 66 228" opacity="0.5"/>
+        </g>
+        <!-- handles -->
+        <rect x="474" y="152" width="32" height="8" rx="4" fill="#ccd2d8" stroke="#a5adb6"/>
+        <rect x="538" y="150" width="32" height="8" rx="4" fill="#ccd2d8" stroke="#a5adb6"/>
+        <!-- fuel cap -->
+        <path d="M200 156 L230 156 L230 176 L200 176 Z" fill="none" stroke="#c3cad1" stroke-width="1.4" rx="3"/>
+        <!-- mirror -->
+        <path d="M652 116 C662 104 684 104 692 112 L694 126 C680 130 664 129 652 124 Z" fill="url(#bodyG)" stroke="#aeb6bf" stroke-width="1.2"/>
+        <path d="M676 126 L690 134 L674 135 Z" fill="#1a1e22"/>
+        <!-- headlight + DRL -->
+        <path d="M778 146 C810 150 840 160 864 174 L860 182 C834 172 806 166 774 162 Z" fill="#18212b"/>
+        <path d="M784 152 C812 155 840 164 858 174" stroke="#e8f7ff" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+        <path d="M828 196 C846 194 862 194 871 198 L869 230 C852 232 838 230 826 226 Z" fill="#15191d"/>
+        <path d="M832 204 L866 204 M832 212 L866 212 M832 220 L866 220" stroke="#2c3238" stroke-width="2"/>
+        <!-- tail light -->
+        <path d="M55 108 L70 103 L74 162 L56 168 Z" fill="url(#redG)"/>
+        <path d="M60 112 L62 160" stroke="#ffb3b8" stroke-width="1.6" opacity="0.8"/>
+        <rect x="56" y="226" width="16" height="5" rx="2.5" fill="#b3121b"/>
+        <!-- spoiler -->
+        <path d="M70 70 L112 60 L114 66 L76 76 Z" fill="#1d2126"/>
+        <!-- logo -->
+        <text x="548" y="198" font-family="Inter, sans-serif" font-weight="800" font-size="20" letter-spacing="4" fill="#1c2228">CINQ</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="road" aria-hidden="true"><div class="dashes" id="dashes"></div></div>
+  <div class="curb" aria-hidden="true"></div>
+
+  <div class="cards" id="cards">
+    <article class="card">
+      <div class="card-progress"><i id="cardProgress"></i></div>
+      <div class="numcol">
+        <div class="odo" id="odo" aria-label="Section 01"></div>
+        <small>CINQ / MOBILITY</small>
+      </div>
+      <div class="divider"></div>
+      <div class="content" id="content">
+        <!-- service text sets injected by JS -->
+        <div class="card-foot">
+          <span class="sec">SECTION <span id="secNum">01</span> / 10</span>
+          <a class="btn" href="#platform">Explore service <span>→</span></a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- aerial: side view changes to top view -->
+  <div class="aerial" id="aerial">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <filter id="asphalt" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7"/>
+          <feColorMatrix values="0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.52  0 0 0 0.22 0"/>
+        </filter>
+        <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+          <stop offset="0.5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.65"/>
+        </radialGradient>
+        <linearGradient id="streak" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="0.5"/>
+        </linearGradient>
+      </defs>
+      <rect width="1600" height="900" fill="#1a1c1f"/>
+      <rect width="1600" height="900" filter="url(#asphalt)"/>
+      <!-- road -->
+      <path d="M-120 760 C300 760 620 720 900 500 S1300 140 1740 110" stroke="#24272b" stroke-width="250" fill="none"/>
+      <path d="M-120 760 C300 760 620 720 900 500 S1300 140 1740 110" stroke="#2f3337" stroke-width="250" fill="none" opacity="0.4" stroke-dasharray="2 14"/>
+      <path d="M-120 640 C300 640 560 600 820 400 S1240 20 1740 -10" stroke="#9aa0a6" stroke-width="4" fill="none" opacity="0.6"/>
+      <path d="M-120 880 C300 880 690 840 980 600 S1360 260 1740 230" stroke="#9aa0a6" stroke-width="4" fill="none" opacity="0.6"/>
+      <path id="roadPath" d="M-120 760 C300 760 620 720 900 500 S1300 140 1740 110" stroke="#c9cdd1" stroke-width="5" fill="none" stroke-dasharray="60 70" opacity="0.7"/>
+      <g id="streaks" opacity="0.8">
+        <rect x="0" y="220" width="260" height="2" fill="url(#streak)"/>
+        <rect x="500" y="80" width="340" height="2" fill="url(#streak)"/>
+        <rect x="900" y="820" width="300" height="2" fill="url(#streak)"/>
+        <rect x="200" y="420" width="220" height="2" fill="url(#streak)"/>
+        <rect x="1200" y="560" width="260" height="2" fill="url(#streak)"/>
+      </g>
+      <g id="topCar"><use href="#sym-top" x="-58" y="-121" width="116" height="242"/></g>
+      <rect width="1600" height="900" fill="url(#vignette)"/>
+    </svg>
+    <div class="headline">
+      <span class="line"><span>Reliability</span></span>
+      <span class="line"><span>at <em>every</em></span></span>
+      <span class="line"><span><em>milestone</em></span></span>
+      <span class="line"><span class="sub">Campus, city, airport and seaport movement, coordinated by Compass Travel &amp; Transportation.</span></span>
+    </div>
+    <div class="stats">
+      <div class="stat"><b><span class="cnt" data-to="10">0</span></b><span>Service lines on one corridor</span></div>
+      <div class="stat"><b><span class="cnt" data-to="6">0</span></b><span>Corridor destinations connected</span></div>
+      <div class="stat"><b><span class="cnt" data-to="12">0</span><sup>AC</sup></b><span>Charging stations planned</span></div>
+      <div class="stat"><b><span class="cnt" data-to="24">0</span><sup>/7</sup></b><span>Operations support</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLATFORM: 4 product panels, top-view car on road ============ -->
+<section class="platform" id="platform" aria-label="CINQ digital platform">
+  <div class="pf-left">
+    <div class="pf-head">
+      <div style="display:flex;align-items:flex-start">
+        <div class="brand"><b>CINQ</b><small>PRIVATE INTELLIGENCE</small></div>
+        <div class="pf-name" id="pfName">
+          <span style="color:var(--mobility)">MOBILITY</span>
+          <span style="color:var(--terminal)">TERMINAL</span>
+          <span style="color:var(--power)">POWER</span>
+          <span style="color:var(--logistics)">LOGISTICS</span>
+        </div>
+      </div>
+      <div class="pf-count"><div class="odo" id="pfOdo"></div><span>/ 04</span></div>
+    </div>
+
+    <div class="panels" id="panels">
+      <!-- MOBILITY -->
+      <div class="panel">
+        <aside class="pn-side"><div class="pn-logo" style="color:var(--mobility)">CINQ<small>MOBILITY</small></div>
+          <nav class="pn-nav"><span class="on">Overview</span><span>Trips</span><span>Fleet</span><span>Drivers</span></nav>
+          <p class="pn-note">Sample interface. Figures shown are illustrative, not live operating data.</p></aside>
+        <div class="pn-main">
+          <div><h4>Good morning, CINQ Team</h4><p>Here’s what’s happening with your mobility operations today.</p></div>
+          <div class="kpis">
+            <div class="kpi"><small>Active vehicles</small><b><span class="cnt" data-to="48">0</span></b></div>
+            <div class="kpi"><small>Scheduled trips</small><b><span class="cnt" data-to="132">0</span></b></div>
+            <div class="kpi"><small>On-time pickup</small><b><span class="cnt" data-to="98">0</span><em>%</em></b></div>
+            <div class="kpi"><small>Airport transfers</small><b><span class="cnt" data-to="16">0</span></b></div>
+          </div>
+          <div class="viz">
+            <div class="box"><h5>Live operations · Thiruvananthapuram</h5>
+              <svg viewBox="0 0 420 200" preserveAspectRatio="xMidYMid meet">
+                <path d="M30 150 C80 60 180 40 260 60 S390 120 400 170 L40 190 Z" fill="#eaf1ff"/>
+                <g fill="none" stroke="#2b6cf6" stroke-width="2.5" stroke-linecap="round">
+                  <path class="draw" d="M80 140 C120 90 170 80 220 70"/><path class="draw" d="M220 70 C270 64 320 70 350 60"/>
+                  <path class="draw" d="M220 70 C240 110 270 130 320 140"/><path class="draw" d="M80 140 C140 160 200 166 260 168"/>
+                </g>
+                <g font-size="10" font-family="Inter, sans-serif" fill="#33404d" font-weight="600">
+                  <circle cx="80" cy="140" r="6" fill="#2b6cf6"/><text x="40" y="128">Compass Hub</text>
+                  <circle cx="220" cy="70" r="6" fill="#2b6cf6"/><text x="196" y="56">Kazhakkottam</text>
+                  <circle cx="350" cy="60" r="6" fill="#2b6cf6"/><text x="328" y="46">Technopark</text>
+                  <circle cx="320" cy="140" r="6" fill="#2b6cf6"/><text x="300" y="160">Airport</text>
+                  <circle cx="260" cy="168" r="6" fill="#2b6cf6"/><text x="200" y="190">Vizhinjam Port</text>
+                </g>
+              </svg></div>
+            <div class="box"><h5>Upcoming trips</h5>
+              <div class="rows"><div><span>08:30 · Campus → Airport</span><span>MPV</span></div><div><span>09:15 · Port → City</span><span>EV sedan</span></div><div><span>10:00 · Hotel → Technopark</span><span>Sedan</span></div><div><span>11:20 · Airport → Kovalam</span><span>MPV</span></div></div></div>
+          </div>
+        </div>
+      </div>
+      <!-- TERMINAL -->
+      <div class="panel">
+        <aside class="pn-side"><div class="pn-logo" style="color:var(--terminal)">CINQ<small>TERMINAL</small></div>
+          <nav class="pn-nav"><span class="on">Overview</span><span>Projects</span><span>Applications</span><span>Design studio</span></nav>
+          <p class="pn-note">Sample interface. Figures shown are illustrative, not live operating data.</p></aside>
+        <div class="pn-main">
+          <div><h4>Project workspace</h4><p>Route planning, vehicle visibility, trip records and billing software.</p></div>
+          <div class="kpis">
+            <div class="kpi"><small>Active projects</small><b><span class="cnt" data-to="12">0</span></b></div>
+            <div class="kpi"><small>SaaS applications</small><b><span class="cnt" data-to="8">0</span></b></div>
+            <div class="kpi"><small>Design stage</small><b><span class="cnt" data-to="24">0</span></b></div>
+            <div class="kpi"><small>Deployments</small><b><span class="cnt" data-to="36">0</span></b></div>
+          </div>
+          <div class="viz">
+            <div class="box"><h5>Delivery pipeline</h5>
+              <div class="rows">
+                <div style="display:block"><span>Plan · route optimisation</span><div class="bar"><i style="background:var(--terminal);width:92%"></i></div></div>
+                <div style="display:block"><span>Design · rider app</span><div class="bar"><i style="background:var(--terminal);width:74%"></i></div></div>
+                <div style="display:block"><span>Build · billing engine</span><div class="bar"><i style="background:var(--terminal);width:58%"></i></div></div>
+                <div style="display:block"><span>Launch · trip records</span><div class="bar"><i style="background:var(--terminal);width:36%"></i></div></div>
+              </div></div>
+            <div class="box"><h5>Delivery overview</h5>
+              <svg viewBox="0 0 200 120"><g fill="none" stroke-width="12">
+                <circle cx="100" cy="60" r="44" stroke="#efeafe"/>
+                <circle class="ring" cx="100" cy="60" r="44" stroke="#7c4dff" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5" transform="rotate(-90 100 60)" data-pct="0.75"/></g>
+                <text x="100" y="66" text-anchor="middle" font-family="Inter, sans-serif" font-weight="800" font-size="20" fill="#11161b">75%</text></svg></div>
+          </div>
+        </div>
+      </div>
+      <!-- POWER -->
+      <div class="panel">
+        <aside class="pn-side"><div class="pn-logo" style="color:var(--power)">CINQ<small>POWER</small></div>
+          <nav class="pn-nav"><span class="on">Overview</span><span>Charging stations</span><span>Solar</span><span>Battery storage</span></nav>
+          <p class="pn-note">Sample interface. Figures shown are illustrative, not live operating data.</p></aside>
+        <div class="pn-main">
+          <div><h4>Energy overview</h4><p>Solar, lithium battery and inverter integration for the daily route.</p></div>
+          <div class="kpis">
+            <div class="kpi"><small>AC charging points</small><b><span class="cnt" data-to="12">0</span></b></div>
+            <div class="kpi"><small>Available chargers</small><b><span class="cnt" data-to="8">0</span></b></div>
+            <div class="kpi"><small>Battery storage</small><b><span class="cnt" data-to="82">0</span><em>%</em></b></div>
+            <div class="kpi"><small>Solar output</small><b><span class="cnt" data-to="64">0</span><em>kW</em></b></div>
+          </div>
+          <div class="viz">
+            <div class="box"><h5>Solar generation vs. demand</h5>
+              <svg viewBox="0 0 420 180" preserveAspectRatio="none">
+                <path class="area" d="M0 170 C60 160 90 120 140 80 S230 20 280 50 S360 140 420 160 L420 180 L0 180 Z" fill="#1f9d55" opacity="0.15"/>
+                <path class="draw" d="M0 170 C60 160 90 120 140 80 S230 20 280 50 S360 140 420 160" fill="none" stroke="#1f9d55" stroke-width="3"/>
+                <path class="draw" d="M0 140 C80 130 120 110 180 112 S300 120 420 100" fill="none" stroke="#9fd8b7" stroke-width="2.5" stroke-dasharray="6 6"/>
+              </svg></div>
+            <div class="box"><h5>Lithium battery storage</h5>
+              <div style="font-size:34px;font-weight:800;margin-top:10px">82%</div>
+              <div class="bar" style="height:12px"><i style="background:var(--power);width:82%"></i></div>
+              <div class="rows" style="margin-top:14px"><div><span>Inverter</span><span>Online</span></div><div><span>Grid backup</span><span>Ready</span></div></div></div>
+          </div>
+        </div>
+      </div>
+      <!-- LOGISTICS -->
+      <div class="panel">
+        <aside class="pn-side"><div class="pn-logo" style="color:var(--logistics)">CINQ<small>LOGISTICS</small></div>
+          <nav class="pn-nav"><span class="on">Overview</span><span>Shipments</span><span>Storage</span><span>Documents</span></nav>
+          <p class="pn-note">Sample interface. Figures shown are illustrative, not live operating data.</p></aside>
+        <div class="pn-main">
+          <div><h4>Every shipment. <span style="color:var(--logistics)">In sight.</span></h4><p>Real-time visibility across containers, storage and delivery.</p></div>
+          <div class="kpis">
+            <div class="kpi"><small>Containers</small><b><span class="cnt" data-to="24">0</span></b></div>
+            <div class="kpi"><small>In transit</small><b><span class="cnt" data-to="8">0</span></b></div>
+            <div class="kpi"><small>In storage</small><b><span class="cnt" data-to="16">0</span></b></div>
+            <div class="kpi"><small>Storage capacity</small><b><span class="cnt" data-to="66">0</span><em>%</em></b></div>
+          </div>
+          <div class="viz">
+            <div class="box"><h5>Live route</h5>
+              <svg viewBox="0 0 420 160" preserveAspectRatio="xMidYMid meet">
+                <path d="M20 120 C120 120 140 50 220 60 S330 110 400 60" fill="none" stroke="#fde3c6" stroke-width="10" stroke-linecap="round"/>
+                <path id="logiPath" class="draw" d="M20 120 C120 120 140 50 220 60 S330 110 400 60" fill="none" stroke="#ef8a22" stroke-width="3.5" stroke-linecap="round"/>
+                <g font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#33404d">
+                  <circle cx="20" cy="120" r="7" fill="#ef8a22"/><text x="8" y="146">Port gate</text>
+                  <circle cx="220" cy="60" r="7" fill="#ef8a22"/><text x="190" y="40">Storage hub</text>
+                  <circle cx="400" cy="60" r="7" fill="#ef8a22"/><text x="340" y="40">Delivery point</text>
+                </g>
+                <circle id="logiDot" r="6" fill="#fff" stroke="#ef8a22" stroke-width="3"/>
+              </svg></div>
+            <div class="box"><h5>Storage capacity</h5>
+              <div style="font-size:30px;font-weight:800;margin-top:10px">16 / 24</div>
+              <div class="bar" style="height:12px"><i style="background:var(--logistics);width:66%"></i></div>
+              <div class="rows" style="margin-top:14px"><div><span>Customs clearance</span><span>Ready</span></div><div><span>Bill of lading</span><span>Filed</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pf-road" aria-hidden="true">
+    <div class="lane" id="lane"></div>
+    <div class="pf-car" id="pfCar"><svg viewBox="0 0 220 460"><use href="#sym-top"/></svg></div>
+  </div>
+</section>
+
+<!-- ============ CTA / FOOTER ============ -->
+<footer class="cta" id="contact">
+  <h2 class="cta-title"><span class="line"><span>Move with</span></span><span class="line"><span><em>CINQ.</em></span></span></h2>
+  <p class="cta-copy">Employee transportation for campuses, airports and ports across Thiruvananthapuram: verified trips, trained drivers and transparent billing, powered by Compass Nexus iQ.</p>
+  <div class="contact">
+    <div><small>OPERATOR</small><span>M/S Compass Travel &amp; Transportation</span><span>Thiruvananthapuram, Kerala</span></div>
+    <div><small>CALL</small><a href="tel:+919995881477">+91 99958 81477</a><a href="tel:+918590011477">+91 85900 11477</a></div>
+    <div><small>WRITE</small><a href="mailto:navigation@compassnai.com">navigation@compassnai.com</a><a href="mailto:shahas@compassnai.com">shahas@compassnai.com</a></div>
+    <div><small>WEB</small><a href="https://www.compassmobilityindia.com">compassmobilityindia.com</a><a href="https://www.compassnai.com">compassnai.com</a></div>
+  </div>
+  <p class="legal">© Compass Travel &amp; Transportation · CINQ Connected Mobility · Compass Nexus iQ: Intelligent Navigation</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+<script>
+(() => {
+  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+  const $ = (s, p = document) => p.querySelector(s);
+  const $$ = (s, p = document) => [...p.querySelectorAll(s)];
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- content ---------- */
+  const SERVICES = [
+    ["MOBILITY", "Mobility overview", "One connected corridor.", "Campus, city, airport and seaport movement, coordinated by Compass Travel & Transportation."],
+    ["CAMPUS", "Campus mobility", "Employee journeys, organised.", "Daily home pickup and drop, shift planning, scheduled routes and corporate campus transport."],
+    ["AIRPORT", "Airport transfers", "Land. Connect. Continue.", "Transfers connecting Thiruvananthapuram Airport, Technopark, hotels and onward destinations."],
+    ["PORT", "Port & crew transfers", "City to coast.", "Coordinated crew and business transfers connecting Vizhinjam Port, the airport and the city."],
+    ["CORRIDOR", "Corridor network", "Every destination, connected.", "Technopark · Kazhakkottam · Airport · Vizhinjam · Kovalam · Compass Hub"],
+    ["ELECTRIC", "Electric fleet", "Electric by intention.", "EV sedan services alongside Ertiga, Marazzo, Crysta and Kia Carens for different travel needs."],
+    ["POWER", "CINQ Power", "Energy for the daily route.", "12 AC charging stations planned, with solar, lithium battery and inverter integration."],
+    ["TERMINAL", "CINQ Terminal", "Clarity for every journey.", "Software and SaaS for route planning, vehicle visibility, trip records and transparent billing."],
+    ["DRIVERS", "Driving partners", "People behind every trip.", "Driver verification, duty planning, safety checks and coordinated operational support."],
+    ["IMPACT", "Impact & billing", "Measured movement.", "Trip records, EV kilometre share, monthly reporting and transparent billing."]
+  ];
+  const N = SERVICES.length;
+
+  /* ---------- helpers: split text, odometer, wheels ---------- */
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  function splitChars(text) {
+    return text.split(" ").map(w => `<span class="w">${[...w].map(c => `<span class="ch">${esc(c)}</span>`).join("")}</span>`).join(" ");
+  }
+  function splitWords(text) {
+    return text.split(" ").map(w => `<span class="wm"><span class="wi">${esc(w)}</span></span>`).join(" ");
+  }
+  function buildOdo(el, cols) {
+    el.innerHTML = Array.from({ length: cols }, () =>
+      `<span class="col"><span>${Array.from({ length: 10 }, (_, d) => `<span>${d}</span>`).join("")}</span></span>`).join("");
+    return $$(".col > span", el);
+  }
+  function setOdo(strips, n, instant) {
+    String(n).padStart(strips.length, "0").split("").forEach((d, i) =>
+      gsap.to(strips[i], { yPercent: -10 * d, duration: instant ? 0 : 0.9, ease: "power3.out", delay: instant ? 0 : i * 0.06, overwrite: true }));
+  }
+  function buildWheel(g) {
+    const NS = "http://www.w3.org/2000/svg";
+    let spokes = "";
+    for (let i = 0; i < 10; i++) {
+      const a = (i * 36) * Math.PI / 180, b = a + 0.16, c = a - 0.16, d = a + 0.07, e = a - 0.07;
+      spokes += `<path d="M${(9 * Math.cos(d)).toFixed(1)} ${(9 * Math.sin(d)).toFixed(1)} L${(34 * Math.cos(b)).toFixed(1)} ${(34 * Math.sin(b)).toFixed(1)} L${(34 * Math.cos(c)).toFixed(1)} ${(34 * Math.sin(c)).toFixed(1)} L${(9 * Math.cos(e)).toFixed(1)} ${(9 * Math.sin(e)).toFixed(1)} Z" fill="url(#rimG)"/>`;
+    }
+    let lugs = "";
+    for (let i = 0; i < 5; i++) { const a = i * 72 * Math.PI / 180; lugs += `<circle cx="${(6 * Math.cos(a)).toFixed(1)}" cy="${(6 * Math.sin(a)).toFixed(1)}" r="1.4" fill="#4a5158"/>`; }
+    g.innerHTML = `
+      <circle r="52" fill="#0f1113"/>
+      <circle r="49" fill="none" stroke="#24282d" stroke-width="4"/>
+      <circle r="38.5" fill="#cfd4da"/>
+      <g class="spin">
+        <circle r="36" fill="#1a1e23"/>
+        <circle r="35" fill="none" stroke="url(#rimG)" stroke-width="2"/>
+        ${spokes}
+        <circle r="10" fill="url(#rimG)"/>${lugs}<circle r="3" fill="#2a3036"/>
+      </g>
+      <path d="M-22 -16 A27 27 0 0 1 -2 -27" stroke="#8a1018" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.9"/>`;
+    return $(".spin", g);
+  }
+
+  /* ---------- build card text sets ---------- */
+  const content = $("#content");
+  const foot = $(".card-foot", content);
+  const sets = SERVICES.map(([, title, tag, desc], i) => {
+    const el = document.createElement("div");
+    el.className = "txt";
+    el.setAttribute("aria-hidden", i ? "true" : "false");
+    el.innerHTML = `<h2>${splitChars(title)}</h2><h3>${splitWords(tag)}</h3><p>${splitWords(desc)}</p>`;
+    content.insertBefore(el, foot);
+    return { el, chars: $$(".ch", el), words: $$(".wi", el) };
+  });
+  sets.slice(1).forEach(s => { gsap.set(s.chars, { yPercent: 110, autoAlpha: 0 }); gsap.set(s.words, { yPercent: 105, autoAlpha: 0 }); });
+
+  const odo = buildOdo($("#odo"), 2);
+  const pfOdo = buildOdo($("#pfOdo"), 2);
+  setOdo(odo, 0, true);
+  setOdo(pfOdo, 1, true);
+  const spinners = [buildWheel($("#wheelRear")), buildWheel($("#wheelFront"))];
+
+  /* ---------- ambient driving loops (speed follows scroll velocity) ---------- */
+  const loops = [
+    gsap.to(spinners, { rotation: 360, transformOrigin: "50% 50%", duration: 0.7, ease: "none", repeat: -1 }),
+    gsap.to("#dashes", { x: -260, duration: 0.5, ease: "none", repeat: -1 }),
+    gsap.to("#lane", { y: 170, duration: 0.45, ease: "none", repeat: -1 }),
+    gsap.to("#streaks rect", { x: 700, duration: 1.2, ease: "none", repeat: -1, stagger: { each: 0.25, repeat: -1 } }),
+    gsap.to("#carBody", { y: -1.6, duration: 0.32, ease: "sine.inOut", repeat: -1, yoyo: true })
+  ];
+  if (reduceMotion) loops.forEach(t => t.pause());
+
+  const kmhEl = $("#kmh");
+  const speed = { v: 0 };
+  const speedTo = gsap.quickTo(speed, "v", { duration: 0.6, ease: "power2.out" });
+  let lastVel = 0;
+  ScrollTrigger.create({ onUpdate: self => { lastVel = Math.abs(self.getVelocity()); } });
+  gsap.ticker.add(() => {
+    lastVel *= 0.92;
+    const boost = Math.min(lastVel / 90, 70);
+    speedTo(22 + boost);
+    kmhEl.textContent = Math.round(speed.v);
+    if (!reduceMotion) loops.slice(0, 4).forEach(t => t.timeScale(0.6 + boost / 14));
+  });
+
+  /* ---------- intro ---------- */
+  const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+  intro
+    .from("#carSide", { xPercent: -170, duration: reduceMotion ? 0 : 2.2, ease: "power2.out" })
+    .from(speed, { v: 0, duration: 1.6 }, 0)
+    .from("#bigword", { yPercent: 40, autoAlpha: 0, duration: 1.2 }, 0.2)
+    .from(".hud > *", { y: -20, autoAlpha: 0, stagger: 0.1, duration: 0.8 }, 0.3)
+    .from("#cards", { yPercent: 30, autoAlpha: 0, duration: 1 }, 0.6)
+    .from(sets[0].chars, { yPercent: 110, autoAlpha: 0, stagger: 0.025, duration: 0.6 }, 1.1)
+    .from(sets[0].words, { yPercent: 105, autoAlpha: 0, stagger: 0.03, duration: 0.6 }, 1.3)
+    .add(() => setOdo(odo, 1), 1.1)
+    .from("#scrollHint", { autoAlpha: 0, duration: 0.6 }, 1.8);
+  gsap.to("#scrollHint", { y: 6, repeat: -1, yoyo: true, duration: 0.8, ease: "sine.inOut" });
+
+  /* ---------- big word swap (separate element from the timeline-controlled wrapper) ---------- */
+  const bigword = $("#bigword");
+  function swapWord(text) {
+    gsap.timeline()
+      .to(bigword, { xPercent: -6, autoAlpha: 0, duration: 0.25, ease: "power2.in", overwrite: true })
+      .add(() => { bigword.textContent = text; })
+      .fromTo(bigword, { xPercent: 8 }, { xPercent: 0, autoAlpha: 1, duration: 0.7, ease: "power3.out" });
+  }
+
+  /* ---------- MASTER STAGE TIMELINE ---------- */
+  let current = 0;
+  const secNum = $("#secNum");
+  const stageTl = gsap.timeline({
+    defaults: { ease: "none" },
+    scrollTrigger: {
+      trigger: "#stage",
+      start: "top top",
+      end: () => "+=" + window.innerHeight * 14,
+      pin: true,
+      scrub: 0.8,
+      invalidateOnRefresh: true,
+      snap: { snapTo: "labels", inertia: false, duration: { min: 0.25, max: 0.7 }, delay: 0.08, ease: "power1.inOut" }
+    },
+    onUpdate() {
+        const t = this.time();
+        const idx = Math.max(0, Math.min(N - 1, Math.round(t)));
+        if (idx !== current && t < N - 0.5 + 0.3) {
+          sets[current].el.setAttribute("aria-hidden", "true");
+          sets[idx].el.setAttribute("aria-hidden", "false");
+          current = idx;
+          setOdo(odo, idx + 1);
+          swapWord(SERVICES[idx][0]);
+          secNum.textContent = String(idx + 1).padStart(2, "0");
+          gsap.to("#cardProgress", { scaleX: (idx + 1) / N, duration: 0.6, ease: "power2.out" });
+          lastVel += 900; // little throttle blip on the speedo
+        }
+    }
+  });
+  stageTl.addLabel("s0", 0).to("#scrollHint", { autoAlpha: 0, duration: 0.3 }, 0.05);
+
+  for (let k = 1; k < N; k++) {
+    const prev = sets[k - 1], next = sets[k], t0 = k - 1 + 0.15;
+    stageTl
+      .fromTo(prev.chars, { yPercent: 0, autoAlpha: 1 }, { yPercent: -110, autoAlpha: 0, stagger: 0.006, duration: 0.3, ease: "power2.in", immediateRender: false }, t0)
+      .fromTo(prev.words, { yPercent: 0, autoAlpha: 1 }, { yPercent: -105, autoAlpha: 0, stagger: 0.003, duration: 0.3, ease: "power2.in", immediateRender: false }, t0)
+      .fromTo(next.chars, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, stagger: 0.009, duration: 0.35, ease: "power3.out", immediateRender: false }, t0 + 0.32)
+      .fromTo(next.words, { yPercent: 105, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, stagger: 0.005, duration: 0.35, ease: "power3.out", immediateRender: false }, t0 + 0.38)
+      .addLabel("s" + k, k);
+  }
+
+  /* side view → top view */
+  const S = N - 1 + 0.3;
+  const roadPath = "#roadPath";
+  gsap.set("#topCar", { transformOrigin: "50% 50%", motionPath: { path: roadPath, align: roadPath, alignOrigin: [0.5, 0.5], autoRotate: 90, start: 0, end: 0.04 } });
+  stageTl
+    .to("#cards", { yPercent: 40, autoAlpha: 0, duration: 0.6, ease: "power2.in" }, S)
+    .to(".bigword-wrap", { autoAlpha: 0, duration: 0.4 }, S + 0.2)
+    .to("#carSide", { rotationX: 78, scale: 0.72, yPercent: -18, autoAlpha: 0, transformPerspective: 1100, transformOrigin: "50% 100%", duration: 1, ease: "power2.in" }, S + 0.3)
+    .to(".sky", { backgroundColor: "#16191c", duration: 0.8 }, S + 0.3)
+    .to("#hudBrand b, #hudKmh", { color: "#eef2f5", duration: 0.6 }, S + 0.5)
+    .to("#aerial", { autoAlpha: 1, duration: 0.8 }, S + 0.75)
+    .fromTo("#topCar", { scale: 1.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.9, ease: "power2.out", immediateRender: false }, S + 0.9)
+    .to("#topCar", { motionPath: { path: roadPath, align: roadPath, alignOrigin: [0.5, 0.5], autoRotate: 90, start: 0.04, end: 0.7 }, duration: 2.6, ease: "power1.inOut" }, S + 0.9)
+    .fromTo(".aerial .line > span", { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, stagger: 0.14, duration: 0.6, ease: "power3.out" }, S + 1.5)
+    .fromTo(".aerial .stat", { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.1, duration: 0.5, ease: "power3.out" }, S + 2.1);
+  $$(".aerial .cnt").forEach((el, i) => {
+    stageTl.fromTo(el, { textContent: 0 }, { textContent: +el.dataset.to, snap: { textContent: 1 }, duration: 1, ease: "power2.out" }, S + 2.15 + i * 0.1);
+  });
+  stageTl.addLabel("aerial", S + 3.7).to({}, { duration: 0.3 });
+
+  /* ---------- PLATFORM TIMELINE ---------- */
+  const panels = $$("#panels .panel");
+  const names = $$("#pfName span");
+  const laneOff = [0, -1, 0, 1]; // lane = 20% of road width, scaled to the car width
+  const laneX = k => () => -50 + laneOff[k] * (0.2 * $(".pf-road").offsetWidth / $("#pfCar").offsetWidth) * 100;
+  gsap.set(panels.slice(1), { autoAlpha: 0, xPercent: 8 });
+  gsap.set(names.slice(1), { autoAlpha: 0, yPercent: 100 });
+  gsap.set($$(".bar i", panels[0].parentNode), { scaleX: 0 });
+  gsap.set("#pfCar", { xPercent: -50, yPercent: -50 });
+  let pfCurrent = 0;
+
+  function panelIn(tl, p, at) {
+    const draws = $$(".draw", p);
+    draws.forEach(d => { const L = d.getTotalLength(); gsap.set(d, { strokeDasharray: L, strokeDashoffset: L }); });
+    tl.to(draws, { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" }, at + 0.1);
+    $$(".cnt", p).forEach(el => tl.fromTo(el, { textContent: 0 }, { textContent: +el.dataset.to, snap: { textContent: 1 }, duration: 0.55, ease: "power2.out" }, at));
+    tl.to($$(".bar i", p), { scaleX: 1, stagger: 0.05, duration: 0.5, ease: "power2.out" }, at + 0.1);
+    tl.fromTo($$(".kpi", p), { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.05, duration: 0.4, ease: "power3.out" }, at);
+    $$(".ring", p).forEach(r => tl.to(r, { strokeDashoffset: 276.5 * (1 - +r.dataset.pct), duration: 0.6, ease: "power2.out" }, at + 0.1));
+    const dot = $("#logiDot", p);
+    if (dot) {
+      gsap.set(dot, { motionPath: { path: "#logiPath", align: "#logiPath", alignOrigin: [0.5, 0.5], end: 0 } });
+      tl.to(dot, { motionPath: { path: "#logiPath", align: "#logiPath", alignOrigin: [0.5, 0.5], start: 0, end: 0.62 }, duration: 0.7, ease: "power1.inOut" }, at + 0.1);
+    }
+  }
+
+  const pfTl = gsap.timeline({
+    defaults: { ease: "none" },
+    scrollTrigger: {
+      trigger: "#platform",
+      start: "top top",
+      end: () => "+=" + window.innerHeight * 4,
+      pin: true,
+      scrub: 0.8,
+      invalidateOnRefresh: true,
+      snap: { snapTo: "labels", inertia: false, duration: { min: 0.25, max: 0.6 }, delay: 0.08 }
+    },
+    onUpdate() {
+      const idx = Math.max(0, Math.min(3, Math.round(this.time() - 0.5)));
+      if (idx !== pfCurrent) { pfCurrent = idx; setOdo(pfOdo, idx + 1); lastVel += 700; }
+    }
+  });
+  panelIn(pfTl, panels[0], 0);
+  pfTl.addLabel("p0", 0.65);
+  for (let k = 1; k < panels.length; k++) {
+    const at = k - 0.3;
+    pfTl
+      .to(panels[k - 1], { xPercent: -8, scale: 0.96, autoAlpha: 0, duration: 0.35, ease: "power2.in" }, at)
+      .to(names[k - 1], { yPercent: -100, autoAlpha: 0, duration: 0.3 }, at)
+      .to(panels[k], { xPercent: 0, autoAlpha: 1, duration: 0.4, ease: "power3.out" }, at + 0.3)
+      .to(names[k], { yPercent: 0, autoAlpha: 1, duration: 0.35, ease: "power3.out" }, at + 0.3)
+      .to("#pfCar", { keyframes: [{ rotation: k % 2 ? -9 : 9, duration: 0.25 }, { rotation: 0, duration: 0.3 }], ease: "sine.inOut" }, at)
+      .to("#pfCar", { xPercent: laneX(k), duration: 0.55, ease: "power2.inOut" }, at);
+    panelIn(pfTl, panels[k], at + 0.35);
+    pfTl.addLabel("p" + k, k + 0.65);
+  }
+  pfTl.to({}, { duration: 0.4 });
+
+  /* ---------- CTA reveal ---------- */
+  gsap.from(".cta .line > span", { yPercent: 110, stagger: 0.12, duration: 1, ease: "power4.out", scrollTrigger: { trigger: ".cta", start: "top 70%" } });
+  gsap.from(".cta-copy, .contact > div, .legal", { y: 30, autoAlpha: 0, stagger: 0.08, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: ".cta", start: "top 55%" } });
+
+  window.addEventListener("load", () => ScrollTrigger.refresh());
+  window.__tl = { stageTl, pfTl };
+})();
+</script>
+</body>
+</html>
