@@ -27,3 +27,9 @@ These examples are intended as reference implementations for AI agents and for q
 - **examples/nuxt/** — Nuxt 4 with GSAP re-usable composable.
 - From repo root: `cd examples/nuxt && npm install && npm run dev`.
 - Patterns: GSAP as reusable composable (`useGSAP.ts`), for gsap access, lazy-loading plugins, `gsap.context(() => {}, scope)` cleanup.
+
+## Landing page — scroll-driven mobility showcase
+
+- **examples/landing-mobility/** — a single self-contained `index.html` (GSAP, ScrollTrigger and MotionPathPlugin from cdnjs). Open it directly in a browser.
+- Patterns: one pinned scrubbed master timeline with labels and `snap`; per-character and per-word text reveals; odometer-style number rolls and `textContent` counters with `snap`; a side-view SVG vehicle whose wheels and road speed follow `ScrollTrigger.getVelocity()`; a 3D tilt from the side view into a top-view vehicle that follows an SVG road with `motionPath` and `autoRotate`; a second pinned section of dashboard panels with a lane-changing top-view vehicle.
+- Pitfall shown: inside a parent hidden with `autoAlpha`, use `fromTo()` (not `from()`) for children, because `from()` records the inherited `visibility: hidden` as its end value.
