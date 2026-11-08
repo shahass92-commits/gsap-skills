@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CINQ Connected Mobility</title>
-<meta name="description" content="CINQ connected mobility: campus, airport, port and corridor transport by Compass Travel &amp; Transportation. GSAP ScrollTrigger landing page." />
+<title>CNIQ Connected Mobility</title>
+<meta name="description" content="CNIQ connected mobility: campus, airport, port and corridor transport by Compass Travel &amp; Transportation. GSAP ScrollTrigger landing page." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
@@ -43,6 +43,9 @@
   .brand small, .kmh small { display: block; font-size: 11px; letter-spacing: 0.14em; color: var(--muted); margin-top: 6px; font-weight: 600; }
   .kmh { text-align: right; font-weight: 800; font-size: 18px; letter-spacing: 0.04em; color: #46505a; font-variant-numeric: tabular-nums; }
   .car-side { position: absolute; left: 50%; bottom: calc(100vh - var(--sky-h)); width: min(72vw, 112vh); transform: translate(-50%, 3.2%); will-change: transform; }
+  .car-photo { display: none; width: 100%; height: auto; }
+  .has-photo .car-photo { display: block; }
+  .has-photo svg { display: none !important; }
   .car-side svg { display: block; width: 100%; height: auto; overflow: visible; }
   .road { position: absolute; left: 0; right: 0; top: var(--sky-h); height: var(--road-h); background: linear-gradient(#0b0d0f, #15181b 18%, #121417); overflow: hidden; }
   .dashes { position: absolute; top: 58%; left: 0; width: calc(100% + 260px); height: 4px; border-radius: 2px; background: repeating-linear-gradient(90deg, #5d636b 0 110px, transparent 110px 260px); will-change: transform; }
@@ -52,7 +55,7 @@
   .card-progress { position: absolute; left: 2.4vw; right: 2.4vw; top: 0; height: 2px; background: #2a353f; }
   .card-progress i { position: absolute; inset: 0; transform-origin: 0 50%; background: linear-gradient(90deg, var(--teal), #7fd6ee); transform: scaleX(0.1); }
   .numcol { display: flex; flex-direction: column; justify-content: flex-start; }
-  .odo { display: flex; font-family: var(--mono); font-weight: 500; color: var(--teal); font-size: clamp(44px, 8.5vh, 92px); line-height: 1; height: 1em; overflow: hidden; }
+  .odo { display: flex; font-family: var(--sans); font-weight: 700; letter-spacing: -0.02em; color: var(--teal); font-size: clamp(44px, 8.5vh, 92px); line-height: 1; height: 1em; overflow: hidden; }
   .odo .col { display: block; height: 1em; overflow: hidden; }
   .odo .col > span { display: block; }
   .odo .col > span > span { display: block; height: 1em; }
@@ -60,7 +63,7 @@
   .divider { background: #2b363f; }
   .content { position: relative; min-width: 0; }
   .txt { position: absolute; inset: 0 0 auto 0; }
-  .txt h2 { font-family: var(--mono); font-weight: 700; color: #eef3f6; font-size: clamp(16px, 2.4vh, 24px); letter-spacing: 0.06em; text-transform: uppercase; }
+  .txt h2 { font-family: var(--sans); font-weight: 800; color: #eef3f6; font-size: clamp(18px, 3.2vh, 32px); letter-spacing: 0.01em; text-transform: uppercase; }
   .txt h3 { margin-top: 1.4vh; color: #f3f6f8; font-size: clamp(15px, 2.3vh, 22px); font-weight: 700; }
   .txt p { margin-top: 1.4vh; color: #aab4bd; font-size: clamp(13px, 1.8vh, 17px); line-height: 1.6; max-width: 620px; }
   .w, .wm { display: inline-block; white-space: nowrap; }
@@ -199,9 +202,13 @@
       <path d="M30 150 L44 180 L44 382 L32 402 C27 330 27 220 30 150 Z" fill="url(#topGlass)"/>
       <path d="M190 150 L176 180 L176 382 L188 402 C193 330 193 220 190 150 Z" fill="url(#topGlass)"/>
       <!-- roof + panoramic glass -->
-      <rect x="64" y="196" width="92" height="132" rx="16" fill="url(#topGlass)"/>
+      <path d="M46 176 C80 168 140 168 174 176 L174 384 C140 392 80 392 46 384 Z" fill="#0c0f12"/>
+      <rect x="64" y="196" width="92" height="150" rx="14" fill="#151a20" stroke="#2a3138" stroke-width="1.5"/>
+      <path d="M64 246 L156 246 M64 296 L156 296" stroke="#2a3138" stroke-width="1.2"/>
       <path d="M72 204 L104 204 L76 300 L72 300 Z" fill="#fff" opacity="0.1"/>
-      <path d="M52 192 L52 380 M168 192 L168 380" stroke="#262b31" stroke-width="5" stroke-linecap="round"/>
+      <path d="M54 186 C50 260 50 320 54 384 M166 186 C170 260 170 320 166 384" stroke="#d5dade" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+      <text x="22" y="190" transform="rotate(90 22 190)" font-family="Inter, sans-serif" font-weight="800" font-size="11" letter-spacing="2" fill="#1c2228">CNIQ</text>
+      <text x="198" y="226" transform="rotate(-90 198 226)" font-family="Inter, sans-serif" font-weight="800" font-size="11" letter-spacing="2" fill="#1c2228">CNIQ</text>
       <!-- rear glass -->
       <path d="M48 386 C80 394 140 394 172 386 L178 420 C140 432 80 432 42 420 Z" fill="url(#topGlass)"/>
       <!-- lights -->
@@ -217,18 +224,19 @@
 </svg>
 
 <!-- ============ STAGE: hero + 10 services + aerial ============ -->
-<section class="stage" id="stage" aria-label="CINQ services">
+<section class="stage" id="stage" aria-label="CNIQ services">
   <div class="sky">
     <div class="bigword-wrap" aria-hidden="true"><span class="bigword" id="bigword">MOBILITY</span></div>
   </div>
 
   <div class="hud">
-    <div class="brand" id="hudBrand"><b>CINQ</b><small>CONNECTED MOBILITY</small></div>
+    <div class="brand" id="hudBrand"><b>CNIQ</b><small>CONNECTED MOBILITY</small></div>
     <div class="kmh" id="hudKmh"><span id="kmh">0</span> KM/H<small>LIVE CORRIDOR</small></div>
   </div>
   <div class="scroll-hint" id="scrollHint">SCROLL TO DRIVE ↓</div>
 
   <div class="car-side" id="carSide" aria-hidden="true">
+    <img class="car-photo" id="carSidePhoto" alt="" />
     <svg viewBox="0 0 900 340" role="img">
       <defs>
         <linearGradient id="bodyG" x1="0" y1="0" x2="0" y2="1">
@@ -287,7 +295,8 @@
         <path d="M560 70 L592 82 L566 132 L540 132 Z" fill="#fff" opacity="0.06"/>
         <!-- chrome window trims -->
         <path d="M70 135 L678 135" stroke="#eef1f3" stroke-width="3"/>
-        <path d="M104 70 L512 62 C545 61 568 66 590 78" stroke="#d3d9de" stroke-width="2" fill="none"/>
+        <path d="M92 62 L520 52 C560 51 590 56 612 70 L596 80 C572 68 546 63 512 64 L104 72 C88 74 78 84 74 100 L70 108 C68 86 76 68 92 62 Z" fill="#0c0f12"/>
+        <path d="M104 73 L512 65 C545 64 568 69 590 81" stroke="#3a4148" stroke-width="1.2" fill="none"/>
         <!-- sliding door rail + character line -->
         <path d="M150 142 L336 140" stroke="#b9c1c9" stroke-width="2" opacity="0.8"/>
         <path d="M64 186 C300 180 600 175 860 172" stroke="#ffffff" stroke-width="2.4" fill="none"/>
@@ -318,8 +327,10 @@
         <rect x="56" y="226" width="16" height="5" rx="2.5" fill="#b3121b"/>
         <!-- spoiler -->
         <path d="M70 70 L112 60 L114 66 L76 76 Z" fill="#1d2126"/>
+        <path d="M755.2 252 A66 66 0 1 0 624.8 252" stroke="#15181b" stroke-width="9" fill="none"/>
+        <path d="M270.2 252 A66 66 0 1 0 139.8 252" stroke="#15181b" stroke-width="9" fill="none"/>
         <!-- logo -->
-        <text x="548" y="198" font-family="Inter, sans-serif" font-weight="800" font-size="20" letter-spacing="4" fill="#1c2228">CINQ</text>
+        <text x="548" y="198" font-family="Inter, sans-serif" font-weight="800" font-size="20" letter-spacing="4" fill="#1c2228">CNIQ</text>
       </g>
     </svg>
   </div>
@@ -332,7 +343,7 @@
       <div class="card-progress"><i id="cardProgress"></i></div>
       <div class="numcol">
         <div class="odo" id="odo" aria-label="Section 01"></div>
-        <small>CINQ / MOBILITY</small>
+        <small>CNIQ / MOBILITY</small>
       </div>
       <div class="divider"></div>
       <div class="content" id="content">
@@ -394,11 +405,11 @@
 </section>
 
 <!-- ============ PLATFORM: 4 product panels, top-view car on road ============ -->
-<section class="platform" id="platform" aria-label="CINQ digital platform">
+<section class="platform" id="platform" aria-label="CNIQ digital platform">
   <div class="pf-left">
     <div class="pf-head">
       <div style="display:flex;align-items:flex-start">
-        <div class="brand"><b>CINQ</b><small>PRIVATE INTELLIGENCE</small></div>
+        <div class="brand"><b>CNIQ</b><small>PRIVATE INTELLIGENCE</small></div>
         <div class="pf-name" id="pfName">
           <span style="color:var(--mobility)">MOBILITY</span>
           <span style="color:var(--terminal)">TERMINAL</span>
@@ -412,11 +423,11 @@
     <div class="panels" id="panels">
       <!-- MOBILITY -->
       <div class="panel">
-        <aside class="pn-side"><div class="pn-logo" style="color:var(--mobility)">CINQ<small>MOBILITY</small></div>
+        <aside class="pn-side"><div class="pn-logo" style="color:var(--mobility)">CNIQ<small>MOBILITY</small></div>
           <nav class="pn-nav"><span class="on">Overview</span><span>Trips</span><span>Fleet</span><span>Drivers</span></nav>
           <p class="pn-note">Sample interface. Figures shown are illustrative, not live operating data.</p></aside>
         <div class="pn-main">
-          <div><h4>Good morning, CINQ Team</h4><p>Here’s what’s happening with your mobility operations today.</p></div>
+          <div><h4>Good morning, CNIQ Team</h4><p>Here’s what’s happening with your mobility operations today.</p></div>
           <div class="kpis">
             <div class="kpi"><small>Active vehicles</small><b><span class="cnt" data-to="48">0</span></b></div>
             <div class="kpi"><small>Scheduled trips</small><b><span class="cnt" data-to="132">0</span></b></div>
@@ -446,7 +457,7 @@
       </div>
       <!-- TERMINAL -->
       <div class="panel">
-        <aside class="pn-side"><div class="pn-logo" style="color:var(--terminal)">CINQ<small>TERMINAL</small></div>
+        <aside class="pn-side"><div class="pn-logo" style="color:var(--terminal)">CNIQ<small>TERMINAL</small></div>
           <nav class="pn-nav"><span class="on">Overview</span><span>Projects</span><span>Applications</span><span>Design studio</span></nav>
           <p class="pn-note">Sample interface. Figures shown are illustrative, not live operating data.</p></aside>
         <div class="pn-main">
@@ -475,7 +486,7 @@
       </div>
       <!-- POWER -->
       <div class="panel">
-        <aside class="pn-side"><div class="pn-logo" style="color:var(--power)">CINQ<small>POWER</small></div>
+        <aside class="pn-side"><div class="pn-logo" style="color:var(--power)">CNIQ<small>POWER</small></div>
           <nav class="pn-nav"><span class="on">Overview</span><span>Charging stations</span><span>Solar</span><span>Battery storage</span></nav>
           <p class="pn-note">Sample interface. Figures shown are illustrative, not live operating data.</p></aside>
         <div class="pn-main">
@@ -502,7 +513,7 @@
       </div>
       <!-- LOGISTICS -->
       <div class="panel">
-        <aside class="pn-side"><div class="pn-logo" style="color:var(--logistics)">CINQ<small>LOGISTICS</small></div>
+        <aside class="pn-side"><div class="pn-logo" style="color:var(--logistics)">CNIQ<small>LOGISTICS</small></div>
           <nav class="pn-nav"><span class="on">Overview</span><span>Shipments</span><span>Storage</span><span>Documents</span></nav>
           <p class="pn-note">Sample interface. Figures shown are illustrative, not live operating data.</p></aside>
         <div class="pn-main">
@@ -542,7 +553,7 @@
 
 <!-- ============ CTA / FOOTER ============ -->
 <footer class="cta" id="contact">
-  <h2 class="cta-title"><span class="line"><span>Move with</span></span><span class="line"><span><em>CINQ.</em></span></span></h2>
+  <h2 class="cta-title"><span class="line"><span>Move with</span></span><span class="line"><span><em>CNIQ.</em></span></span></h2>
   <p class="cta-copy">Employee transportation for campuses, airports and ports across Thiruvananthapuram: verified trips, trained drivers and transparent billing, powered by Compass Nexus iQ.</p>
   <div class="contact">
     <div><small>OPERATOR</small><span>M/S Compass Travel &amp; Transportation</span><span>Thiruvananthapuram, Kerala</span></div>
@@ -550,7 +561,7 @@
     <div><small>WRITE</small><a href="mailto:navigation@compassnai.com">navigation@compassnai.com</a><a href="mailto:shahas@compassnai.com">shahas@compassnai.com</a></div>
     <div><small>WEB</small><a href="https://www.compassmobilityindia.com">compassmobilityindia.com</a><a href="https://www.compassnai.com">compassnai.com</a></div>
   </div>
-  <p class="legal">© Compass Travel &amp; Transportation · CINQ Connected Mobility · Compass Nexus iQ: Intelligent Navigation</p>
+  <p class="legal">© Compass Travel &amp; Transportation · CNIQ Connected Mobility · Compass Nexus iQ: Intelligent Navigation</p>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -571,8 +582,8 @@
     ["PORT", "Port & crew transfers", "City to coast.", "Coordinated crew and business transfers connecting Vizhinjam Port, the airport and the city."],
     ["CORRIDOR", "Corridor network", "Every destination, connected.", "Technopark · Kazhakkottam · Airport · Vizhinjam · Kovalam · Compass Hub"],
     ["ELECTRIC", "Electric fleet", "Electric by intention.", "EV sedan services alongside Ertiga, Marazzo, Crysta and Kia Carens for different travel needs."],
-    ["POWER", "CINQ Power", "Energy for the daily route.", "12 AC charging stations planned, with solar, lithium battery and inverter integration."],
-    ["TERMINAL", "CINQ Terminal", "Clarity for every journey.", "Software and SaaS for route planning, vehicle visibility, trip records and transparent billing."],
+    ["POWER", "CNIQ Power", "Energy for the daily route.", "12 AC charging stations planned, with solar, lithium battery and inverter integration."],
+    ["TERMINAL", "CNIQ Terminal", "Clarity for every journey.", "Software and SaaS for route planning, vehicle visibility, trip records and transparent billing."],
     ["DRIVERS", "Driving partners", "People behind every trip.", "Driver verification, duty planning, safety checks and coordinated operational support."],
     ["IMPACT", "Impact & billing", "Measured movement.", "Trip records, EV kilometre share, monthly reporting and transparent billing."]
   ];
@@ -807,6 +818,20 @@
   gsap.from(".cta-copy, .contact > div, .legal", { y: 30, autoAlpha: 0, stagger: 0.08, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: ".cta", start: "top 55%" } });
 
   window.addEventListener("load", () => ScrollTrigger.refresh());
+  /* ---------- optional generated photos (assets/car-side.png, assets/car-top.png) ---------- */
+  function tryAsset(src, ok) { const img = new Image(); img.onload = () => ok(img); img.src = src; }
+  tryAsset("assets/car-side.png", () => {
+    $("#carSidePhoto").src = "assets/car-side.png";
+    $("#carSide").classList.add("has-photo");
+    ScrollTrigger.refresh();
+  });
+  tryAsset("assets/car-top.png", () => {
+    const NS = "http://www.w3.org/2000/svg";
+    const make = (attrs) => { const im = document.createElementNS(NS, "image"); for (const k in attrs) im.setAttribute(k, attrs[k]); im.setAttribute("href", "assets/car-top.png"); im.setAttribute("preserveAspectRatio", "xMidYMid meet"); return im; };
+    $("#topCar").replaceChildren(make({ x: -58, y: -121, width: 116, height: 242 }));
+    $("#pfCar svg").replaceChildren(make({ x: 0, y: 0, width: 220, height: 460 }));
+  });
+
   window.__tl = { stageTl, pfTl };
 })();
 </script>
